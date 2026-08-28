@@ -30,6 +30,28 @@ import { getPlanetExplanation, getFunctionalNature } from '@/data/planetaryData'
 import Footer from '../components/Footer';
 import BrandLogo from '../components/BrandLogo';
 
+const SIGN_ELEMENTS = {
+  Aries: 'Fire',
+  Taurus: 'Earth',
+  Gemini: 'Air',
+  Cancer: 'Water',
+  Leo: 'Fire',
+  Virgo: 'Earth',
+  Libra: 'Air',
+  Scorpio: 'Water',
+  Sagittarius: 'Fire',
+  Capricorn: 'Earth',
+  Aquarius: 'Air',
+  Pisces: 'Water',
+};
+
+const ELEMENT_EMOJIS = {
+  Fire: '🔥',
+  Earth: '🌍',
+  Air: '💨',
+  Water: '💧',
+};
+
 export default function ReportPage() {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -105,6 +127,10 @@ export default function ReportPage() {
 
   const ascendantSign = userData.ascendant || 'Aries';
   const rulerHouse = userData.rulerHouse ?? 1;
+  const moonSign = userData.moonSign || 'Not calculated';
+  const sunSign = userData.sunSign || 'Not calculated';
+  const getElement = (sign) => SIGN_ELEMENTS[sign] || 'Unknown';
+  const getElementLabel = (sign) => `${ELEMENT_EMOJIS[getElement(sign)] || ''} ${getElement(sign)}`.trim();
 
   const ascendantKey = Object.keys(ASCENDANT_REMEDIES || {}).find(
     (key) => key.toLowerCase() === ascendantSign.toLowerCase()
@@ -182,13 +208,16 @@ export default function ReportPage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-6">
             <div className="p-4 rounded-2xl bg-[#FAF6F0]/60 border border-amber-900/10 transition-colors duration-150 hover:bg-[#FAF6F0]">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-black block mb-1">Ascendant : <span className="text-base font-bold text-slate-500">{ascendantSign} </span></span>
+              <span className="text-[11px] font-bold uppercase tracking-wider text-black block mb-1">Ascendant</span>
+              <span className="text-base font-bold text-slate-500">{ascendantSign} <span className="text-xs font-semibold text-amber-800">· {getElementLabel(ascendantSign)}</span></span>
             </div>
             <div className="p-4 rounded-2xl bg-[#FAF6F0]/60 border border-amber-900/10 transition-colors duration-150 hover:bg-[#FAF6F0]">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-black block mb-1">Moon Sign : <span className="text-base font-bold text-slate-500">{userData.moonSign || 'Not calculated'}</span></span>
+              <span className="text-[11px] font-bold uppercase tracking-wider text-black block mb-1">Moon Sign</span>
+              <span className="text-base font-bold text-slate-500">{moonSign} {moonSign !== 'Not calculated' && <span className="text-xs font-semibold text-amber-800">· {getElementLabel(moonSign)}</span>}</span>
             </div>
             <div className="p-4 rounded-2xl bg-[#FAF6F0]/60 border border-amber-900/10 transition-colors duration-150 hover:bg-[#FAF6F0]">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-black block mb-1">Sun Sign : <span className="text-base font-bold text-slate-500">{userData.sunSign || 'Not calculated'}</span></span>
+              <span className="text-[11px] font-bold uppercase tracking-wider text-black block mb-1">Sun Sign</span>
+              <span className="text-base font-bold text-slate-500">{sunSign} {sunSign !== 'Not calculated' && <span className="text-xs font-semibold text-amber-800">· {getElementLabel(sunSign)}</span>}</span>
             </div>
           </div>
         </section>
@@ -504,9 +533,9 @@ export default function ReportPage() {
           <h1 className="text-2xl font-black text-slate-900">{userData.name || 'User Chart'}</h1>
           <p className="text-xs text-slate-600 mt-1">Archetype: {ascendantData?.tagline || `${ascendantSign} Persona`}</p>
           <div className="flex gap-6 mt-2 text-xs text-slate-700">
-            <span><b>Ascendant:</b> {ascendantSign}</span>
-            <span><b>Moon Sign:</b> {userData.moonSign || 'Not calculated'}</span>
-            <span><b>Sun Sign:</b> {userData.sunSign || 'Not calculated'}</span>
+            <span><b>Ascendant:</b> {ascendantSign} ({getElementLabel(ascendantSign)})</span>
+            <span><b>Moon Sign:</b> {moonSign}{moonSign !== 'Not calculated' ? ` (${getElementLabel(moonSign)})` : ''}</span>
+            <span><b>Sun Sign:</b> {sunSign}{sunSign !== 'Not calculated' ? ` (${getElementLabel(sunSign)})` : ''}</span>
           </div>
         </div>
 
